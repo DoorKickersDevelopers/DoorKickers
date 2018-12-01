@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 114721979109353444}
   - component: {fileID: 114161337722349448}
   - component: {fileID: 54647063719896786}
-  - component: {fileID: 114501141869435150}
+  - component: {fileID: 114721158131969742}
   m_Layer: 10
   m_Name: Player
   m_TagString: Human
@@ -490,18 +490,6 @@ MonoBehaviour:
     type: 2}
   BulletSpawn: {fileID: 4399714121532342}
   IsLocalObject: 0
---- !u!114 &114501141869435150
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1206230223843878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ef10c8342bfd4442900951858c6f8b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  c: {fileID: 1915383744401688}
 --- !u!114 &114637326157803800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -529,6 +517,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114721158131969742
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1206230223843878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef10c8342bfd4442900951858c6f8b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  c: {fileID: 1915383744401688}
 --- !u!114 &114721979109353444
 MonoBehaviour:
   m_ObjectHideFlags: 1

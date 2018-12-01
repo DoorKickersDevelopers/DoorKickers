@@ -461,9 +461,10 @@ MonoBehaviour:
     type: 2}
   WallPrefab: {fileID: 1201182557250586, guid: 4ff4cc972c174fc489570239c629dd75, type: 2}
   EdgeWidth: 4
-  DoorWidth: 2
+  CenterIntensity: 15
+  DoorWidth: 1
   MinRoom: 3
-  space: 3
+  space: 2
   p: 0.1
 --- !u!1 &1496392212
 GameObject:
@@ -525,7 +526,6 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 1998701636397050, guid: b4831760e45bf924b938629605b83b30, type: 2}
-  - {fileID: 1838915953681240, guid: 6df349fc448b5c349acfa68d27142c2d, type: 2}
   - {fileID: 1398566497377704, guid: a12cfd15fe8b50244bc49787a2ac9e08, type: 2}
   - {fileID: 1888885577262376, guid: d50e11b342b31e94db77c77c094ade70, type: 2}
   - {fileID: 1201182557250586, guid: 4ff4cc972c174fc489570239c629dd75, type: 2}
@@ -571,7 +571,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1

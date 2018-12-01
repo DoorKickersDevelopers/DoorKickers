@@ -32,6 +32,12 @@ public class PlayerController : NetworkBehaviour {
 			}
 		}
 	}
+
+	private void FixedUpdate() {
+		GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
+		GetComponent<Rigidbody>().angularVelocity = new Vector3(0,0,0);
+	}
+
 	[Command]
 	void CmdShoot() {
 		var Bullet = Instantiate(BulletPrefab, BulletSpawn.position, BulletSpawn.rotation);

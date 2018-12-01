@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine.Experimental.PlayerLoop;
 using Random = UnityEngine.Random;
 
 public class Ground : NetworkBehaviour {
@@ -14,6 +15,9 @@ public class Ground : NetworkBehaviour {
 
 	public int EdgeWidth;
 	//场地周围一圈空地的宽度
+
+	public int CenterIntensity;
+	//生成的核弹在地图中心的强度，使用该值表示地图离边缘该宽度处不会产生核弹
 	
 	public int DoorWidth;
 	//门的宽度
@@ -30,8 +34,8 @@ public class Ground : NetworkBehaviour {
 	private int height;
 	
 	private bool[,] square;
-	private Vector3 offset;	
-	
+	private Vector3 offset;
+	private bool[,] color;
 	
 	public override void OnStartServer() {
 
@@ -47,28 +51,17 @@ public class Ground : NetworkBehaviour {
 		height -= 2 * EdgeWidth;
 		offset += new Vector3(EdgeWidth,0,EdgeWidth);
 		
-		square = new bool[width+1, height+1];
-		DrawWall();
+		square = new bool[width + 1, height + 1];
+		color = new bool[width + 1, height + 1]; 
 		
+		BuildMap();
+		while (!LegalMap()) BuildMap();
 		
-		DrawLine(1, 1, width - 1, height - 1);
-		
-		for(int i = 1; i <= width - space; i++){
-			for(int j = 1; j <= height - space; j++){
-				if(Random.value < p){
-					for(int k = i; k <= i+space-1; k++){
-						for(int l = j; l <= j+space-1; l++){
-							square[k, l] = false;
-						}
-					}
-				}
-			}
-		}
-		int x = Random.Range(1, width );
-		int y = Random.Range(1, height );
+		int x = Random.Range(CenterIntensity, width+1-CenterIntensity);
+		int y = Random.Range(CenterIntensity, height+1-CenterIntensity);
 		while(square[x, y]){
-			x = Random.Range(1, width );
-			y = Random.Range(1, height );
+			x = Random.Range(CenterIntensity, width+1-CenterIntensity);
+			y = Random.Range(CenterIntensity, height+1-CenterIntensity);
 		}
 		var Nuclear = Instantiate(NuclearPrefab, (new Vector3(x,0,y))+offset, Quaternion.Euler(0f,0f,0f));
 		Debug.Log(Nuclear.transform.position);
@@ -83,31 +76,54 @@ public class Ground : NetworkBehaviour {
 			}
 		}
 	}
+
+	void dfs(int x, int y) {
+		color[x,y] = true;
+		if (x > 0 && !color[x - 1, y]) dfs(x - 1, y);
+		if (x < width && !color[x + 1, y]) dfs(x + 1, y);
+		if (y > 0 && !color[x, y - 1]) dfs(x, y - 1);
+		if (y < height && !color[x, y + 1]) dfs(x, y + 1);
+	}
 	
-	void DrawWall(){
-		for(int i = 0; i <= width; i++){
-			for(int j = 0; j <= height; j++){
-				if(i == 0 || j == 0 || i == width || j == height){
-					square[i, j] = true;
+	bool LegalMap() {
+		for(int i = 0; i <= width; i++)
+			for (int j = 0; j <= height; j++)
+				color[i, j] = false;
+		for(int i=0;i<=width;i++)
+			if (!square[i, 0]) {
+				dfs(i,0);
+				break;
+			}
+		for(int i=0;i<=width;i++)
+			for(int j=0;j<=height;j++)
+				if (!square[i, j] && !color[i, j])
+					return false;
+		return true;
+	}
+	
+	void BuildMap() {
+		Clear();
+		
+		
+		DrawLine(0, 0, width , height );
+		
+		for(int i = 0; i <= width - space + 1; i++){
+			for(int j = 0; j <= height - space + 1; j++){
+				if(Random.value < p){
+					for(int k = i; k <= i+space-1; k++){
+						for(int l = j; l <= j+space-1; l++){
+							square[k, l] = false;
+						}
+					}
 				}
-				else
-					square[i, j] = false;
 			}
 		}
-
-		int d = Random.Range(1, width - DoorWidth + 1);
-		for (int i = d; i <= d + DoorWidth - 1; i++)
-			square[i, 0] = false;
-		d = Random.Range(1, width - DoorWidth + 1);
-		for (int i = d; i <= d + DoorWidth - 1; i++)
-			square[i, height] = false;
-		d = Random.Range(1, height - DoorWidth + 1);
-		for (int j = d; j <= d + DoorWidth - 1; j++)
-			square[0, j] = false;
-		d = Random.Range(1, height - DoorWidth + 1);
-		for (int j = d; j <= d + DoorWidth - 1; j++)
-			square[width, j] = false;
-
+	}
+	
+	void Clear(){
+		for(int i = 0; i <= width; i++)
+			for(int j = 0; j <= height; j++)
+					square[i, j] = false;
 	}
 	
 	void DrawLine(int x1, int y1, int x2, int y2){
